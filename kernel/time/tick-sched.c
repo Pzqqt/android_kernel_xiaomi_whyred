@@ -707,7 +707,7 @@ static ktime_t tick_nohz_stop_sched_tick(struct tick_sched *ts,
 
 		ts->last_tick = hrtimer_get_expires(&ts->sched_timer);
 		ts->tick_stopped = 1;
-		trace_tick_stop(1, " ");
+//		trace_tick_stop(1, " ");
 	}
 
 	/*

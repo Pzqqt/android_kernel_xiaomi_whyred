@@ -225,7 +225,7 @@ static void cmdq_dumpregs(struct cmdq_host *cq_host)
 	if (cq_host->offset_changed)
 		offset = CQ_V5_VENDOR_CFG;
 
-	MMC_TRACE(mmc,
+	/*MMC_TRACE(mmc,
 	"%s: 0x0C=0x%08x 0x10=0x%08x 0x14=0x%08x 0x18=0x%08x 0x28=0x%08x 0x2C=0x%08x 0x30=0x%08x 0x34=0x%08x 0x54=0x%08x 0x58=0x%08x 0x5C=0x%08x 0x48=0x%08x\n",
 	__func__, cmdq_readl(cq_host, CQCTL), cmdq_readl(cq_host, CQIS),
 	cmdq_readl(cq_host, CQISTE), cmdq_readl(cq_host, CQISGE),
@@ -272,7 +272,7 @@ static void cmdq_dumpregs(struct cmdq_host *cq_host)
 	pr_err(DRV_NAME": Vendor cfg 0x%08x\n",
 	       cmdq_readl(cq_host, CQ_VENDOR_CFG + offset));
 	pr_err(DRV_NAME ": ===========================================\n");
-
+*/
 	cmdq_dump_task_history(cq_host);
 	if (cq_host->ops->dump_vendor_regs)
 		cq_host->ops->dump_vendor_regs(mmc);
@@ -480,7 +480,7 @@ static int cmdq_enable(struct mmc_host *mmc)
 pm_ref_count:
 	cmdq_runtime_pm_put(cq_host);
 out:
-	MMC_TRACE(mmc, "%s: CQ enabled err: %d\n", __func__, err);
+	//MMC_TRACE(mmc, "%s: CQ enabled err: %d\n", __func__, err);
 	return err;
 }
 
@@ -498,7 +498,7 @@ static void cmdq_disable_nosync(struct mmc_host *mmc, bool soft)
 
 	cq_host->enabled = false;
 	mmc_host_set_cq_disable(mmc);
-	MMC_TRACE(mmc, "%s: CQ disabled\n", __func__);
+	//MMC_TRACE(mmc, "%s: CQ disabled\n", __func__);
 }
 
 static void cmdq_disable(struct mmc_host *mmc, bool soft)
@@ -582,11 +582,11 @@ static void cmdq_prep_task_desc(struct mmc_request *mrq,
 		BLK_COUNT(mrq->cmdq_req->data.blocks) |
 		BLK_ADDR((u64)mrq->cmdq_req->blk_addr);
 
-	MMC_TRACE(mrq->host,
+	/*MMC_TRACE(mrq->host,
 		"%s: Task: 0x%08x | Args: 0x%08x | cnt: 0x%08x\n", __func__,
 		lower_32_bits(*data),
 		upper_32_bits(*data),
-		mrq->cmdq_req->data.blocks);
+		mrq->cmdq_req->data.blocks);*/
 }
 
 static int cmdq_dma_map(struct mmc_host *host, struct mmc_request *mrq)
@@ -727,11 +727,11 @@ static void cmdq_prep_dcmd_desc(struct mmc_host *mmc,
 	dataddr = (__le64 __force *)(desc + 4);
 	dataddr[0] = cpu_to_le64((u64)mrq->cmd->arg);
 	cmdq_log_task_desc_history(cq_host, *task_desc, true);
-	MMC_TRACE(mrq->host,
+	/*MMC_TRACE(mrq->host,
 		"%s: DCMD: Task: 0x%08x | Args: 0x%08x\n",
 		__func__,
 		lower_32_bits(*task_desc),
-		upper_32_bits(*task_desc));
+		upper_32_bits(*task_desc));*/
 }
 
 static inline
@@ -838,7 +838,7 @@ ring_doorbell:
 		cmdq_dumpregs(cq_host);
 		BUG_ON(1);
 	}
-	MMC_TRACE(mmc, "%s: tag: %d\n", __func__, tag);
+	//MMC_TRACE(mmc, "%s: tag: %d\n", __func__, tag);
 	cmdq_writel(cq_host, 1 << tag, CQTDBR);
 	/* Commit the doorbell write immediately */
 	wmb();
@@ -912,8 +912,8 @@ irqreturn_t cmdq_irq(struct mmc_host *mmc, int err)
 
 	if (!status && !err)
 		return IRQ_NONE;
-	MMC_TRACE(mmc, "%s: CQIS: 0x%x err: %d\n",
-		__func__, status, err);
+	//MMC_TRACE(mmc, "%s: CQIS: 0x%x err: %d\n",
+	//	__func__, status, err);
 
 	stat_err = status & (CQIS_RED | CQIS_GCE | CQIS_ICCE);
 
@@ -1048,8 +1048,8 @@ skip_cqterri:
 				mrq->data->error = -EIO;
 			pr_err("%s: Crypto generic error while processing task %lu!",
 				mmc_hostname(mmc), tag);
-			MMC_TRACE(mmc, "%s: GCE error detected with tag %lu\n",
-					__func__, tag);
+			//MMC_TRACE(mmc, "%s: GCE error detected with tag %lu\n",
+			//		__func__, tag);
 		}
 		/*
 		 * Invalid crypto config error detected by CQE, clear the task.
@@ -1072,8 +1072,8 @@ skip_cqterri:
 			mrq = get_req_by_tag(cq_host, tag);
 			pr_err("%s: Crypto config error while processing task %lu!",
 				mmc_hostname(mmc), tag);
-			MMC_TRACE(mmc, "%s: ICCE error with tag %lu\n",
-						__func__, tag);
+			//MMC_TRACE(mmc, "%s: ICCE error with tag %lu\n",
+			//			__func__, tag);
 			if (mrq->data)
 				mrq->data->error = -EIO;
 			else if (mrq->cmd)
@@ -1125,8 +1125,8 @@ skip_cqterri:
 				/* complete the corresponding mrq */
 				pr_debug("%s: completing tag -> %lu\n",
 					 mmc_hostname(mmc), tag);
-				MMC_TRACE(mmc, "%s: completing tag -> %lu\n",
-					__func__, tag);
+				//MMC_TRACE(mmc, "%s: completing tag -> %lu\n",
+				//	__func__, tag);
 				cmdq_finish_data(mmc, tag);
 			}
 		}
@@ -1229,8 +1229,8 @@ static int cmdq_halt(struct mmc_host *mmc, bool halt)
 					continue;
 				}
 			} else {
-				MMC_TRACE(mmc, "%s: halt done , retries: %d\n",
-					__func__, retries);
+				//MMC_TRACE(mmc, "%s: halt done , retries: %d\n",
+				//	__func__, retries);
 				break;
 			}
 		}
@@ -1244,7 +1244,7 @@ static int cmdq_halt(struct mmc_host *mmc, bool halt)
 			cq_host->ops->set_data_timeout(mmc, 0xf);
 		if (cq_host->ops->clear_set_irqs)
 			cq_host->ops->clear_set_irqs(mmc, true);
-		MMC_TRACE(mmc, "%s: unhalt done\n", __func__);
+		//MMC_TRACE(mmc, "%s: unhalt done\n", __func__);
 		cmdq_writel(cq_host, cmdq_readl(cq_host, CQCTL) & ~HALT,
 			    CQCTL);
 	}

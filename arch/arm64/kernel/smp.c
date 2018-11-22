@@ -168,7 +168,7 @@ asmlinkage notrace void secondary_start_kernel(void)
 	cpu_uninstall_idmap();
 
 	preempt_disable();
-	trace_hardirqs_off();
+	//trace_hardirqs_off();
 
 	/*
 	 * If the system has established the capabilities, make sure
@@ -683,7 +683,7 @@ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
 	for_each_cpu(cpu, target)
 		per_cpu(pending_ipi, cpu) = true;
 
-	trace_ipi_raise(target, ipi_types[ipinr]);
+	//trace_ipi_raise(target, ipi_types[ipinr]);
 	__smp_cross_call(target, ipinr);
 }
 
@@ -842,7 +842,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 	struct pt_regs *old_regs = set_irq_regs(regs);
 
 	if ((unsigned)ipinr < NR_IPI) {
-		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
+		//trace_ipi_entry_rcuidle(ipi_types[ipinr]);
 		__inc_irq_stat(cpu, ipi_irqs[ipinr]);
 	}
 
@@ -896,8 +896,8 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 		break;
 	}
 
-	if ((unsigned)ipinr < NR_IPI)
-		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+//	if ((unsigned)ipinr < NR_IPI)
+		//trace_ipi_exit_rcuidle(ipi_types[ipinr]);
 
 	per_cpu(pending_ipi, cpu) = false;
 	set_irq_regs(old_regs);

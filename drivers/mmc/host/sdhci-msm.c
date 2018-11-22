@@ -2532,7 +2532,7 @@ void sdhci_msm_dump_pwr_ctrl_regs(struct sdhci_host *host)
 		sdhci_msm_readl_relaxed(host,
 			msm_host_offset->CORE_PWRCTL_CTL), irq_flags);
 
-	MMC_TRACE(host->mmc,
+	/*MMC_TRACE(host->mmc,
 		"%s: Sts: 0x%08x | Mask: 0x%08x | Ctrl: 0x%08x, pwr isr state=0x%x\n",
 		__func__,
 		sdhci_msm_readb_relaxed(host,
@@ -2540,7 +2540,7 @@ void sdhci_msm_dump_pwr_ctrl_regs(struct sdhci_host *host)
 		sdhci_msm_readb_relaxed(host,
 			msm_host_offset->CORE_PWRCTL_MASK),
 		sdhci_msm_readb_relaxed(host,
-			msm_host_offset->CORE_PWRCTL_CTL), irq_flags);
+			msm_host_offset->CORE_PWRCTL_CTL), irq_flags);*/
 }
 
 static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
@@ -2816,9 +2816,9 @@ static void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
 				msecs_to_jiffies(MSM_PWR_IRQ_TIMEOUT_MS))) {
 		__WARN_printf("%s: request(%d) timed out waiting for pwr_irq\n",
 					mmc_hostname(host->mmc), req_type);
-		MMC_TRACE(host->mmc,
-			"%s: request(%d) timed out waiting for pwr_irq\n",
-			__func__, req_type);
+		//MMC_TRACE(host->mmc,
+		//	"%s: request(%d) timed out waiting for pwr_irq\n",
+		//	__func__, req_type);
 		sdhci_msm_dump_pwr_ctrl_regs(host);
 	}
 	pr_debug("%s: %s: request %d done\n", mmc_hostname(host->mmc),
@@ -3373,7 +3373,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
 	if (host->cq_host)
 		sdhci_msm_cmdq_dump_debug_ram(host);
 
-	MMC_TRACE(host->mmc, "Data cnt: 0x%08x | Fifo cnt: 0x%08x\n",
+	/*MMC_TRACE(host->mmc, "Data cnt: 0x%08x | Fifo cnt: 0x%08x\n",
 		sdhci_msm_readl_relaxed(host,
 			msm_host_offset->CORE_MCI_DATA_CNT),
 		sdhci_msm_readl_relaxed(host,
@@ -3402,7 +3402,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
 	pr_info("Vndr func2: 0x%08x\n",
 		readl_relaxed(host->ioaddr +
 			msm_host_offset->CORE_VENDOR_SPEC_FUNC2));
-
+*/
 	/*
 	 * tbsel indicates [2:0] bits and tbsel2 indicates [7:4] bits
 	 * of CORE_TESTBUS_CONFIG register.

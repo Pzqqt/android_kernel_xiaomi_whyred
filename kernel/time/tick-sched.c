@@ -183,17 +183,17 @@ static bool can_stop_full_tick(void)
 	WARN_ON_ONCE(!irqs_disabled());
 
 	if (!sched_can_stop_tick()) {
-		trace_tick_stop(0, "more than 1 task in runqueue\n");
+//		trace_tick_stop(0, "more than 1 task in runqueue\n");
 		return false;
 	}
 
 	if (!posix_cpu_timers_can_stop_tick(current)) {
-		trace_tick_stop(0, "posix timers running\n");
+//		trace_tick_stop(0, "posix timers running\n");
 		return false;
 	}
 
 	if (!perf_event_can_stop_tick()) {
-		trace_tick_stop(0, "perf events running\n");
+//		trace_tick_stop(0, "perf events running\n");
 		return false;
 	}
 

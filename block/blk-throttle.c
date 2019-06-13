@@ -517,8 +517,8 @@ static void throtl_schedule_pending_timer(struct throtl_service_queue *sq,
 	if (time_after(expires, max_expire))
 		expires = max_expire;
 	mod_timer(&sq->pending_timer, expires);
-	throtl_log(sq, "schedule timer. delay=%lu jiffies=%lu",
-		   expires - jiffies, jiffies);
+	//throtl_log(sq, "schedule timer. delay=%lu jiffies=%lu",
+	//	   expires - jiffies, jiffies);
 }
 
 /**
@@ -574,10 +574,10 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
 		tg->slice_start[rw] = start;
 
 	tg->slice_end[rw] = jiffies + throtl_slice;
-	throtl_log(&tg->service_queue,
-		   "[%c] new slice with credit start=%lu end=%lu jiffies=%lu",
-		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
-		   tg->slice_end[rw], jiffies);
+	//throtl_log(&tg->service_queue,
+	//	   "[%c] new slice with credit start=%lu end=%lu jiffies=%lu",
+	//	   rw == READ ? 'R' : 'W', tg->slice_start[rw],
+	//	   tg->slice_end[rw], jiffies);
 }
 
 static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw)
@@ -586,10 +586,10 @@ static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw)
 	tg->io_disp[rw] = 0;
 	tg->slice_start[rw] = jiffies;
 	tg->slice_end[rw] = jiffies + throtl_slice;
-	throtl_log(&tg->service_queue,
-		   "[%c] new slice start=%lu end=%lu jiffies=%lu",
-		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
-		   tg->slice_end[rw], jiffies);
+	//throtl_log(&tg->service_queue,
+	//	   "[%c] new slice start=%lu end=%lu jiffies=%lu",
+	//	   rw == READ ? 'R' : 'W', tg->slice_start[rw],
+	//	   tg->slice_end[rw], jiffies);
 }
 
 static inline void throtl_set_slice_end(struct throtl_grp *tg, bool rw,
@@ -602,10 +602,10 @@ static inline void throtl_extend_slice(struct throtl_grp *tg, bool rw,
 				       unsigned long jiffy_end)
 {
 	tg->slice_end[rw] = roundup(jiffy_end, throtl_slice);
-	throtl_log(&tg->service_queue,
-		   "[%c] extend slice start=%lu end=%lu jiffies=%lu",
-		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
-		   tg->slice_end[rw], jiffies);
+	//throtl_log(&tg->service_queue,
+	//	   "[%c] extend slice start=%lu end=%lu jiffies=%lu",
+	//	   rw == READ ? 'R' : 'W', tg->slice_start[rw],
+	//	   tg->slice_end[rw], jiffies);
 }
 
 /* Determine if previously allocated or extended slice is complete or not */
@@ -670,10 +670,10 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
 
 	tg->slice_start[rw] += nr_slices * throtl_slice;
 
-	throtl_log(&tg->service_queue,
-		   "[%c] trim slice nr=%lu bytes=%llu io=%lu start=%lu end=%lu jiffies=%lu",
-		   rw == READ ? 'R' : 'W', nr_slices, bytes_trim, io_trim,
-		   tg->slice_start[rw], tg->slice_end[rw], jiffies);
+	//throtl_log(&tg->service_queue,
+	//	   "[%c] trim slice nr=%lu bytes=%llu io=%lu start=%lu end=%lu jiffies=%lu",
+	//	   rw == READ ? 'R' : 'W', nr_slices, bytes_trim, io_trim,
+	//	   tg->slice_start[rw], tg->slice_end[rw], jiffies);
 }
 
 static bool tg_with_in_iops_limit(struct throtl_grp *tg, struct bio *bio,
@@ -1043,13 +1043,13 @@ again:
 	dispatched = false;
 
 	while (true) {
-		throtl_log(sq, "dispatch nr_queued=%u read=%u write=%u",
-			   sq->nr_queued[READ] + sq->nr_queued[WRITE],
-			   sq->nr_queued[READ], sq->nr_queued[WRITE]);
+		//throtl_log(sq, "dispatch nr_queued=%u read=%u write=%u",
+		//	   sq->nr_queued[READ] + sq->nr_queued[WRITE],
+		//	   sq->nr_queued[READ], sq->nr_queued[WRITE]);
 
 		ret = throtl_select_dispatch(sq);
 		if (ret) {
-			throtl_log(sq, "bios disp=%u", ret);
+		//	throtl_log(sq, "bios disp=%u", ret);
 			dispatched = true;
 		}
 
@@ -1161,10 +1161,10 @@ static void tg_conf_updated(struct throtl_grp *tg)
 	struct cgroup_subsys_state *pos_css;
 	struct blkcg_gq *blkg;
 
-	throtl_log(&tg->service_queue,
-		   "limit change rbps=%llu wbps=%llu riops=%u wiops=%u",
-		   tg->bps[READ], tg->bps[WRITE],
-		   tg->iops[READ], tg->iops[WRITE]);
+	//throtl_log(&tg->service_queue,
+	//	   "limit change rbps=%llu wbps=%llu riops=%u wiops=%u",
+	//	   tg->bps[READ], tg->bps[WRITE],
+	//	   tg->iops[READ], tg->iops[WRITE]);
 
 	/*
 	 * Update has_rules[] flags for the updated tg's subtree.  A tg is
@@ -1464,11 +1464,11 @@ bool blk_throtl_bio(struct request_queue *q, struct blkcg_gq *blkg,
 	}
 
 	/* out-of-limit, queue to @tg */
-	throtl_log(sq, "[%c] bio. bdisp=%llu sz=%u bps=%llu iodisp=%u iops=%u queued=%d/%d",
-		   rw == READ ? 'R' : 'W',
-		   tg->bytes_disp[rw], bio->bi_iter.bi_size, tg->bps[rw],
-		   tg->io_disp[rw], tg->iops[rw],
-		   sq->nr_queued[READ], sq->nr_queued[WRITE]);
+	//throtl_log(sq, "[%c] bio. bdisp=%llu sz=%u bps=%llu iodisp=%u iops=%u queued=%d/%d",
+	//	   rw == READ ? 'R' : 'W',
+	//	   tg->bytes_disp[rw], bio->bi_iter.bi_size, tg->bps[rw],
+	//	   tg->io_disp[rw], tg->iops[rw],
+	//	   sq->nr_queued[READ], sq->nr_queued[WRITE]);
 
 	bio_associate_current(bio);
 	tg->td->nr_queued[rw]++;

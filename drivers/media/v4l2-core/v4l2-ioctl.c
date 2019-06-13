@@ -2876,12 +2876,12 @@ video_usercopy(struct file *file, unsigned int cmd, unsigned long arg,
 		goto out;
 	}
 
-	if (err == 0) {
-		if (cmd == VIDIOC_DQBUF)
-			trace_v4l2_dqbuf(video_devdata(file)->minor, parg);
-		else if (cmd == VIDIOC_QBUF)
-			trace_v4l2_qbuf(video_devdata(file)->minor, parg);
-	}
+	//if (err == 0) {
+	//	if (cmd == VIDIOC_DQBUF)
+	//		trace_v4l2_dqbuf(video_devdata(file)->minor, parg);
+	//	else if (cmd == VIDIOC_QBUF)
+	//		trace_v4l2_qbuf(video_devdata(file)->minor, parg);
+	//}
 
 	if (has_array_args) {
 		*kernel_ptr = (void __force *)user_ptr;

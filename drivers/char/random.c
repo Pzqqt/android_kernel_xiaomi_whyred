@@ -539,7 +539,7 @@ static void _mix_pool_bytes(struct entropy_store *r, const void *in,
 static void __mix_pool_bytes(struct entropy_store *r, const void *in,
 			     int nbytes)
 {
-	trace_mix_pool_bytes_nolock(r->name, nbytes, _RET_IP_);
+	//trace_mix_pool_bytes_nolock(r->name, nbytes, _RET_IP_);
 	_mix_pool_bytes(r, in, nbytes);
 }
 
@@ -548,7 +548,7 @@ static void mix_pool_bytes(struct entropy_store *r, const void *in,
 {
 	unsigned long flags;
 
-	trace_mix_pool_bytes(r->name, nbytes, _RET_IP_);
+	//trace_mix_pool_bytes(r->name, nbytes, _RET_IP_);
 	spin_lock_irqsave(&r->lock, flags);
 	_mix_pool_bytes(r, in, nbytes);
 	spin_unlock_irqrestore(&r->lock, flags);
@@ -685,9 +685,9 @@ retry:
 		}
 	}
 
-	trace_credit_entropy_bits(r->name, nbits,
-				  entropy_count >> ENTROPY_SHIFT,
-				  r->entropy_total, _RET_IP_);
+//	trace_credit_entropy_bits(r->name, nbits,
+//				  entropy_count >> ENTROPY_SHIFT,
+//				  r->entropy_total, _RET_IP_);
 
 	if (r == &input_pool) {
 		int entropy_bits = entropy_count >> ENTROPY_SHIFT;
@@ -764,7 +764,7 @@ void add_device_randomness(const void *buf, unsigned int size)
 	unsigned long time = random_get_entropy() ^ jiffies;
 	unsigned long flags;
 
-	trace_add_device_randomness(size, _RET_IP_);
+	//trace_add_device_randomness(size, _RET_IP_);
 	spin_lock_irqsave(&input_pool.lock, flags);
 	_mix_pool_bytes(&input_pool, buf, size);
 	_mix_pool_bytes(&input_pool, &time, sizeof(time));
@@ -961,7 +961,7 @@ void add_disk_randomness(struct gendisk *disk)
 		return;
 	/* first major is 1, so we get >= 0x200 here */
 	add_timer_randomness(disk->random, 0x100 + disk_devt(disk));
-	trace_add_disk_randomness(disk_devt(disk), ENTROPY_BITS(&input_pool));
+	//trace_add_disk_randomness(disk_devt(disk), ENTROPY_BITS(&input_pool));
 }
 EXPORT_SYMBOL_GPL(add_disk_randomness);
 #endif
@@ -1013,8 +1013,8 @@ static void _xfer_secondary_pool(struct entropy_store *r, size_t nbytes)
 	/* but never more than the buffer size */
 	bytes = min_t(int, bytes, sizeof(tmp));
 
-	trace_xfer_secondary_pool(r->name, bytes * 8, nbytes * 8,
-				  ENTROPY_BITS(r), ENTROPY_BITS(r->pull));
+	//trace_xfer_secondary_pool(r->name, bytes * 8, nbytes * 8,
+	//			  ENTROPY_BITS(r), ENTROPY_BITS(r->pull));
 	bytes = extract_entropy(r->pull, tmp, bytes,
 				random_read_wakeup_bits / 8, rsvd_bytes);
 	mix_pool_bytes(r, tmp, bytes);
@@ -1033,8 +1033,8 @@ static void push_to_pool(struct work_struct *work)
 					      push_work);
 	BUG_ON(!r);
 	_xfer_secondary_pool(r, random_read_wakeup_bits/8);
-	trace_push_to_pool(r->name, r->entropy_count >> ENTROPY_SHIFT,
-			   r->pull->entropy_count >> ENTROPY_SHIFT);
+	//trace_push_to_pool(r->name, r->entropy_count >> ENTROPY_SHIFT,
+	//		   r->pull->entropy_count >> ENTROPY_SHIFT);
 }
 
 /*
@@ -1079,7 +1079,7 @@ retry:
 	if (cmpxchg(&r->entropy_count, orig, entropy_count) != orig)
 		goto retry;
 
-	trace_debit_entropy(r->name, 8 * ibytes);
+	//trace_debit_entropy(r->name, 8 * ibytes);
 	if (ibytes &&
 	    (r->entropy_count >> ENTROPY_SHIFT) < random_write_wakeup_bits) {
 		wake_up_interruptible(&random_write_wait);
@@ -1171,8 +1171,8 @@ static ssize_t extract_entropy(struct entropy_store *r, void *buf,
 		if (!r->last_data_init) {
 			r->last_data_init = 1;
 			spin_unlock_irqrestore(&r->lock, flags);
-			trace_extract_entropy(r->name, EXTRACT_SIZE,
-					      ENTROPY_BITS(r), _RET_IP_);
+			//trace_extract_entropy(r->name, EXTRACT_SIZE,
+			//		      ENTROPY_BITS(r), _RET_IP_);
 			xfer_secondary_pool(r, EXTRACT_SIZE);
 			extract_buf(r, tmp);
 			spin_lock_irqsave(&r->lock, flags);
@@ -1181,7 +1181,7 @@ static ssize_t extract_entropy(struct entropy_store *r, void *buf,
 		spin_unlock_irqrestore(&r->lock, flags);
 	}
 
-	trace_extract_entropy(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
+	//trace_extract_entropy(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
 	xfer_secondary_pool(r, nbytes);
 	nbytes = account(r, nbytes, min, reserved);
 
@@ -1219,7 +1219,7 @@ static ssize_t extract_entropy_user(struct entropy_store *r, void __user *buf,
 	__u8 tmp[EXTRACT_SIZE];
 	int large_request = (nbytes > 256);
 
-	trace_extract_entropy_user(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
+//	trace_extract_entropy_user(r->name, nbytes, ENTROPY_BITS(r), _RET_IP_);
 	xfer_secondary_pool(r, nbytes);
 	nbytes = account(r, nbytes, 0, 0);
 
@@ -1344,7 +1344,7 @@ void get_random_bytes_arch(void *buf, int nbytes)
 {
 	char *p = buf;
 
-	trace_get_random_bytes_arch(nbytes, _RET_IP_);
+//	trace_get_random_bytes_arch(nbytes, _RET_IP_);
 	while (nbytes) {
 		unsigned long v;
 		int chunk = min(nbytes, (int)sizeof(unsigned long));
@@ -1438,9 +1438,9 @@ _random_read(int nonblock, char __user *buf, size_t nbytes)
 		n = extract_entropy_user(&blocking_pool, buf, nbytes);
 		if (n < 0)
 			return n;
-		trace_random_read(n*8, (nbytes-n)*8,
-				  ENTROPY_BITS(&blocking_pool),
-				  ENTROPY_BITS(&input_pool));
+		//trace_random_read(n*8, (nbytes-n)*8,
+		//		  ENTROPY_BITS(&blocking_pool),
+		//		  ENTROPY_BITS(&input_pool));
 		if (n > 0)
 			return n;
 
@@ -1479,8 +1479,8 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
 	nbytes = min_t(size_t, nbytes, INT_MAX >> (ENTROPY_SHIFT + 3));
 	ret = extract_entropy_user(&nonblocking_pool, buf, nbytes);
 
-	trace_urandom_read(8 * nbytes, ENTROPY_BITS(&nonblocking_pool),
-			   ENTROPY_BITS(&input_pool));
+//	trace_urandom_read(8 * nbytes, ENTROPY_BITS(&nonblocking_pool),
+//			   ENTROPY_BITS(&input_pool));
 	return ret;
 }
 

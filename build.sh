@@ -15,7 +15,7 @@ red='\033[0;31m'
 gre='\e[0;32m'
 ZIMG=./out/arch/arm64/boot/Image.gz-dtb
 
-export LOCALVERSION=-v2.6
+export LOCALVERSION=-v2.9
 export LOCALVERSION="-"${target_}${LOCALVERSION}
 
 rm -f $ZIMG
@@ -24,7 +24,7 @@ Start=$(date +"%s")
 export ARCH=arm64
 export SUBARCH=arm64
 export HEADER_ARCH=arm64
-export CLANG_PATH=/home/pzqqt/bin/android_prebuilts_clang_host_linux-x86_clang-5873035
+export CLANG_PATH=/home/pzqqt/bin/android_prebuilts_clang_host_linux-x86_clang-9.0.8
 export KBUILD_COMPILER_STRING=$($CLANG_PATH/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
 
 export KBUILD_BUILD_HOST="lenovo"

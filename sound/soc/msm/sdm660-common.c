@@ -235,7 +235,7 @@ static struct dev_config mi2s_rx_cfg[] = {
 };
 
 static struct dev_config mi2s_tx_cfg[] = {
-	[PRIM_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S24_LE, 2},
+	[PRIM_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
 	[SEC_MI2S]  = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
 	[TERT_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
 	[QUAT_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
@@ -258,9 +258,9 @@ static struct dev_config aux_pcm_tx_cfg[] = {
 static char const *ch_text[] = {"Two", "Three", "Four", "Five",
 					"Six", "Seven", "Eight"};
 static const char *const auxpcm_rate_text[] = {"KHZ_8", "KHZ_16"};
-static char const *mi2s_rate_text[] = {"KHZ_8", "KHZ_16", "KHZ_32",
-					     "KHZ_44P1", "KHZ_48", "KHZ_96",
-					     "KHZ_192", "KHZ_352P8", "KHZ_384"};
+static char const *mi2s_rate_text[] = {"KHZ_8", "KHZ_16",
+				      "KHZ_32", "KHZ_44P1", "KHZ_48",
+				      "KHZ_96", "KHZ_192"};
 static const char *const mi2s_ch_text[] = {"One", "Two", "Three", "Four",
 					   "Five", "Six", "Seven",
 					   "Eight"};
@@ -1102,12 +1102,6 @@ static int mi2s_get_sample_rate_val(int sample_rate)
 	case SAMPLING_RATE_192KHZ:
 		sample_rate_val = 6;
 		break;
-	case SAMPLING_RATE_352P8KHZ:
-		sample_rate_val = 7;
-		break;
-	case SAMPLING_RATE_384KHZ:
-		sample_rate_val = 8;
-		break;
 	default:
 		sample_rate_val = 4;
 		break;
@@ -1140,12 +1134,6 @@ static int mi2s_get_sample_rate(int value)
 		break;
 	case 6:
 		sample_rate = SAMPLING_RATE_192KHZ;
-		break;
-	case 7:
-		sample_rate = SAMPLING_RATE_352P8KHZ;
-		break;
-	case 8:
-		sample_rate = SAMPLING_RATE_384KHZ;
 		break;
 	default:
 		sample_rate = SAMPLING_RATE_48KHZ;

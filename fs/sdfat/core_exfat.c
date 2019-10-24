@@ -1497,7 +1497,7 @@ static FS_FUNC_T exfat_fs_func = {
 	.set_entry_time = exfat_set_entry_time,
 };
 
-s32 mount_exfat(struct super_block *sb, pbr_t *p_pbr)
+s32 mount_exfat_sdfat(struct super_block *sb, pbr_t *p_pbr)
 {
 	pbr64_t *p_bpb = (pbr64_t *)p_pbr;
 	FS_INFO_T *fsi = &(SDFAT_SB(sb)->fsi);
@@ -1549,6 +1549,6 @@ s32 mount_exfat(struct super_block *sb, pbr_t *p_pbr)
 	}
 
 	return 0;
-} /* end of mount_exfat */
+} /* end of mount_exfat_sdfat */
 
 /* end of core_exfat.c */

@@ -2857,8 +2857,6 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
 	if (!FDEV(devi).blkz_seq)
 		return -ENOMEM;
 
-#define F2FS_REPORT_NR_ZONES   4096
-
 	zones = f2fs_kzalloc(sbi,
 			     array_size(F2FS_REPORT_NR_ZONES,
 					sizeof(struct blk_zone)),
@@ -3429,7 +3427,8 @@ try_onemore:
 
 		err = f2fs_recover_fsync_data(sbi, false);
 		if (err < 0) {
-			if (err != -ENOMEM)
+			if (err != -ENOMEM &&
+			    !is_sbi_flag_set(sbi, SBI_NEED_FSCK))
 				skip_recovery = true;
 			need_fsck = true;
 			f2fs_err(sbi, "Cannot recover all fsync data errno=%d",
@@ -3446,8 +3445,12 @@ try_onemore:
 		}
 	}
 
-	/* check zoned block devices' write pointer consistency */
+	/* fix and check zoned block devices' write pointer consistency */
 	if (f2fs_sb_has_blkzoned(sbi)) {
+		err = f2fs_check_write_pointer(sbi);
+		if (err)
+			goto free_meta;
+
 		err = f2fs_fix_curseg_write_pointer(sbi, f2fs_readonly(sb));
 		if (err)
 			goto free_meta;

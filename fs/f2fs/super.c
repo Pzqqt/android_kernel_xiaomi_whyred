@@ -3445,6 +3445,14 @@ try_onemore:
 			goto free_meta;
 		}
 	}
+
+	/* check zoned block devices' write pointer consistency */
+	if (f2fs_sb_has_blkzoned(sbi)) {
+		err = f2fs_fix_curseg_write_pointer(sbi, f2fs_readonly(sb));
+		if (err)
+			goto free_meta;
+	}
+
 reset_checkpoint:
 	/* f2fs_recover_fsync_data() cleared this already */
 	clear_sbi_flag(sbi, SBI_POR_DOING);

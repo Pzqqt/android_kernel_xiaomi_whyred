@@ -3209,8 +3209,8 @@ static int __exfat_show_options(struct seq_file *m, struct super_block *sb)
 		seq_printf(m, ",codepage=%s", sbi->nls_disk->charset);
 	if (sbi->nls_io)
 		seq_printf(m, ",iocharset=%s", sbi->nls_io->charset);
-	if (opts->quiet)
-		seq_puts(m, ",quiet");
+//	if (opts->quiet)
+	seq_puts(m, ",quiet");
 	if (opts->utf8)
 		seq_puts(m, ",utf8");
 	seq_printf(m, ",namecase=%u", opts->casesensitive);

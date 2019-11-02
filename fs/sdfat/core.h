@@ -158,7 +158,7 @@ void release_dentry_set(ENTRY_SET_CACHE_T *es);
 s32 update_dir_chksum(struct super_block *sb, CHAIN_T *p_dir, s32 entry);
 s32 update_dir_chksum_with_entry_set(struct super_block *sb, ENTRY_SET_CACHE_T *es);
 bool is_dir_empty(struct super_block *sb, CHAIN_T *p_dir);
-s32  mount_exfat(struct super_block *sb, pbr_t *p_pbr);
+s32  mount_exfat_sdfat(struct super_block *sb, pbr_t *p_pbr);
 
 /* amap_smart.c :  creation on mount / destroy on umount */
 int amap_create(struct super_block *sb, u32 pack_ratio, u32 sect_per_au, u32 hidden_sect);

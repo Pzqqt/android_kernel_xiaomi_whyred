@@ -145,7 +145,6 @@ static inline unsigned long __invoke_psci_fn_smc(unsigned long function_id,
 	return res.a0;
 }
 
-=======
 /* SMCCC v1.1 implementation madness follows */
 #ifdef CONFIG_ARM64
 

@@ -993,6 +993,12 @@ config EXT_ANC
 	 This option enables support for anti-noise cnacellation
 	 on Sensor DSP.
 
+config MFSE_QMI
+	bool "QMI client for MFSE"
+	depends on MSM_QMI_INTERFACE
+	help
+	 This option enables the QMI client driver for MFSE service.
+
 config STATE_NOTIFIER
     bool "State Notifier"
 

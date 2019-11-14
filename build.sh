@@ -1,13 +1,5 @@
 #!/bin/bash
 
-if [ "$1" == "-o" ]; then
-	target_="Oreo"
-	git apply ./oreo_firmware.patch || exit 1
-else
-	target_="Pie"
-fi
-
-echo "Build for ${target_} firmware"
 
 yellow='\033[0;33m'
 white='\033[0m'
@@ -16,7 +8,7 @@ gre='\e[0;32m'
 ZIMG=./out/arch/arm64/boot/Image.gz-dtb
 
 export LOCALVERSION=-v3.2
-export LOCALVERSION="-"${target_}${LOCALVERSION}
+export LOCALVERSION="-Pie"${LOCALVERSION}
 
 rm -f $ZIMG
 Start=$(date +"%s")
@@ -41,10 +33,6 @@ make -j6 \
 
 End=$(date +"%s")
 Diff=$(($End - $Start))
-
-if [ "$1" == "-o" ]; then
-        git apply -R ./oreo_firmware.patch || exit 1
-fi
 
 if [ -f $ZIMG ]; then
 	echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >> \n $white"

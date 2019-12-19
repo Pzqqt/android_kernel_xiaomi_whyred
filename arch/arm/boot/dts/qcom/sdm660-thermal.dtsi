@@ -21,7 +21,7 @@
 		qcom,start-delay = <60>;
 		zone@0 {
 			reg = <0>;
-			qcom,silver-khz = <1747200>;
+			qcom,silver-khz = <1612800>;
 			qcom,gold-khz = <1804800>;
 			qcom,trip-deg = <39>;
 		};

@@ -433,10 +433,10 @@ static int swp_handler(struct pt_regs *regs, u32 instr)
 		regs->user_regs.regs[destreg] = data;
 
 ret:
-	if (type == TYPE_SWPB)
-		trace_instruction_emulation("swpb", regs->pc);
-	else
-		trace_instruction_emulation("swp", regs->pc);
+	//if (type == TYPE_SWPB)
+	//	trace_instruction_emulation("swpb", regs->pc);
+	//else
+	//	trace_instruction_emulation("swp", regs->pc);
 
 	pr_warn_ratelimited("\"%s\" (%ld) uses obsolete SWP{B} instruction at 0x%llx\n",
 			current->comm, (unsigned long)current->pid, regs->pc);
@@ -497,12 +497,12 @@ static int cp15barrier_handler(struct pt_regs *regs, u32 instr)
 		 */
 		if (aarch32_insn_mcr_extract_opc2(instr) == 5) {
 			dmb(sy);
-			trace_instruction_emulation(
-				"mcr p15, 0, Rt, c7, c10, 5 ; dmb", regs->pc);
+			//trace_instruction_emulation(
+			//	"mcr p15, 0, Rt, c7, c10, 5 ; dmb", regs->pc);
 		} else {
 			dsb(sy);
-			trace_instruction_emulation(
-				"mcr p15, 0, Rt, c7, c10, 4 ; dsb", regs->pc);
+			//trace_instruction_emulation(
+			//	"mcr p15, 0, Rt, c7, c10, 4 ; dsb", regs->pc);
 		}
 		break;
 	case 5:
@@ -512,8 +512,8 @@ static int cp15barrier_handler(struct pt_regs *regs, u32 instr)
 		 * Taking an exception or returning from one acts as an
 		 * instruction barrier. So no explicit barrier needed here.
 		 */
-		trace_instruction_emulation(
-			"mcr p15, 0, Rt, c7, c5, 4 ; isb", regs->pc);
+		//trace_instruction_emulation(
+		//	"mcr p15, 0, Rt, c7, c5, 4 ; isb", regs->pc);
 		break;
 	}
 
@@ -585,7 +585,7 @@ static int compat_setend_handler(struct pt_regs *regs, u32 big_endian)
 		regs->pstate &= ~COMPAT_PSR_E_BIT;
 	}
 
-	trace_instruction_emulation(insn, regs->pc);
+	//trace_instruction_emulation(insn, regs->pc);
 	pr_warn_ratelimited("\"%s\" (%ld) uses deprecated setend instruction at 0x%llx\n",
 			current->comm, (unsigned long)current->pid, regs->pc);
 

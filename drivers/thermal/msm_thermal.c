@@ -1121,9 +1121,9 @@ static void update_cpu_freq(int cpu, enum freq_limits changed)
 			cpumask_or(&throttling_mask, &mask, &throttling_mask);
 			set_cpu_throttled(&mask, true);
 		}
-		trace_thermal_pre_frequency_mit(cpu,
-			cpus[cpu].limited_max_freq,
-			cpus[cpu].limited_min_freq);
+		//trace_thermal_pre_frequency_mit(cpu,
+		//	cpus[cpu].limited_max_freq,
+		//	cpus[cpu].limited_min_freq);
 
 		/*
 		 * If LMH DCVS is available, we update the hardware directly
@@ -1140,20 +1140,20 @@ static void update_cpu_freq(int cpu, enum freq_limits changed)
 			cpufreq_update_policy(cpu);
 		}
 
-		trace_thermal_post_frequency_mit(cpu,
-			cpufreq_quick_get_max(cpu),
-			cpus[cpu].limited_min_freq);
+		//trace_thermal_post_frequency_mit(cpu,
+		//	cpufreq_quick_get_max(cpu),
+		//	cpus[cpu].limited_min_freq);
 		if (ret)
 			pr_err("Unable to update policy for cpu:%d. err:%d\n",
 				cpu, ret);
 	} else if (lmh_dcvs_available) {
-		trace_thermal_pre_frequency_mit(cpu,
-			cpus[cpu].limited_max_freq,
-			cpus[cpu].limited_min_freq);
+		//trace_thermal_pre_frequency_mit(cpu,
+		//	cpus[cpu].limited_max_freq,
+		//	cpus[cpu].limited_min_freq);
 		msm_lmh_dcvs_update(cpu);
-		trace_thermal_post_frequency_mit(cpu,
-			cpufreq_quick_get_max(cpu),
-			cpus[cpu].limited_min_freq);
+		//trace_thermal_post_frequency_mit(cpu,
+		//	cpufreq_quick_get_max(cpu),
+		//	cpus[cpu].limited_min_freq);
 	}
 }
 
@@ -3046,13 +3046,13 @@ static void __ref do_core_control(int temp)
 			lock_device_hotplug();
 			if (cpu_online(i)) {
 				cpu_dev = get_cpu_device(i);
-				trace_thermal_pre_core_offline(i);
+				//trace_thermal_pre_core_offline(i);
 				ret = device_offline(cpu_dev);
 				if (ret < 0)
 					pr_err("Error %d offline core %d\n",
 					       ret, i);
-				trace_thermal_post_core_offline(i,
-					cpumask_test_cpu(i, cpu_online_mask));
+				//trace_thermal_post_core_offline(i,
+				//	cpumask_test_cpu(i, cpu_online_mask));
 			}
 			unlock_device_hotplug();
 			cpus_offlined |= BIT(i);
@@ -3083,13 +3083,13 @@ static void __ref do_core_control(int temp)
 				continue;
 			}
 			cpu_dev = get_cpu_device(i);
-			trace_thermal_pre_core_online(i);
+			//trace_thermal_pre_core_online(i);
 			ret = device_online(cpu_dev);
 			if (ret)
 				pr_err("Error %d online core %d\n",
 						ret, i);
-			trace_thermal_post_core_online(i,
-				cpumask_test_cpu(i, cpu_online_mask));
+			//trace_thermal_post_core_online(i,
+			//	cpumask_test_cpu(i, cpu_online_mask));
 			unlock_device_hotplug();
 			break;
 		}
@@ -3119,7 +3119,7 @@ static int __ref update_offline_cores(int val)
 				continue;
 			}
 			cpu_dev = get_cpu_device(cpu);
-			trace_thermal_pre_core_offline(cpu);
+			//trace_thermal_pre_core_offline(cpu);
 			ret = device_offline(cpu_dev);
 			if (ret < 0) {
 				cpus_offlined &= ~BIT(cpu);
@@ -3130,8 +3130,8 @@ static int __ref update_offline_cores(int val)
 			} else {
 				pr_debug("Offlined CPU%d\n", cpu);
 			}
-			trace_thermal_post_core_offline(cpu,
-				cpumask_test_cpu(cpu, cpu_online_mask));
+			//trace_thermal_post_core_offline(cpu,
+			//	cpumask_test_cpu(cpu, cpu_online_mask));
 			unlock_device_hotplug();
 		} else if (online_core && (previous_cpus_offlined & BIT(cpu))) {
 			lock_device_hotplug();
@@ -3146,7 +3146,7 @@ static int __ref update_offline_cores(int val)
 				continue;
 			}
 			cpu_dev = get_cpu_device(cpu);
-			trace_thermal_pre_core_online(cpu);
+			//trace_thermal_pre_core_online(cpu);
 			ret = device_online(cpu_dev);
 			if (ret && ret == notifier_to_errno(NOTIFY_BAD)) {
 				pr_debug("Onlining CPU%d is vetoed\n", cpu);
@@ -3158,8 +3158,8 @@ static int __ref update_offline_cores(int val)
 					cpu, ret);
 			} else {
 				pr_debug("Onlined CPU%d\n", cpu);
-				trace_thermal_post_core_online(cpu,
-					cpumask_test_cpu(cpu, cpu_online_mask));
+				//trace_thermal_post_core_online(cpu,
+				//	cpumask_test_cpu(cpu, cpu_online_mask));
 			}
 			unlock_device_hotplug();
 		}
@@ -3180,14 +3180,12 @@ static __ref int do_hotplug(void *data)
 	int ret = 0;
 	uint32_t cpu = 0, mask = 0;
 	struct device_clnt_data *clnt = NULL;
-	struct sched_param param = {.sched_priority = MAX_RT_PRIO-2};
 
 	if (!core_control_enabled) {
 		pr_debug("Core control disabled\n");
 		return -EINVAL;
 	}
 
-	sched_setscheduler(current, SCHED_FIFO, &param);
 	while (!kthread_should_stop()) {
 		while (wait_for_completion_interruptible(
 			&hotplug_notify_complete) != 0)
@@ -3836,12 +3834,10 @@ static __ref int do_freq_mitigation(void *data)
 {
 	int ret = 0;
 	uint32_t cpu = 0, max_freq_req = 0, min_freq_req = 0;
-	struct sched_param param = {.sched_priority = MAX_RT_PRIO-1};
 	struct device_clnt_data *clnt = NULL;
 	struct device_manager_data *cpu_dev = NULL;
 	uint32_t changed;
 
-	sched_setscheduler(current, SCHED_FIFO, &param);
 	while (!kthread_should_stop()) {
 		while (wait_for_completion_interruptible(
 			&freq_mitigation_complete) != 0)

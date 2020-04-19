@@ -125,7 +125,7 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
 #ifdef CONFIG_DEBUG_PREEMPT
 		current->preempt_disable_ip = get_parent_ip(CALLER_ADDR1);
 #endif
-		trace_preempt_off(CALLER_ADDR0, get_parent_ip(CALLER_ADDR1));
+//		trace_preempt_off(CALLER_ADDR0, get_parent_ip(CALLER_ADDR1));
 	}
 }
 EXPORT_SYMBOL(__local_bh_disable_ip);
@@ -136,7 +136,7 @@ static void __local_bh_enable(unsigned int cnt)
 	WARN_ON_ONCE(!irqs_disabled());
 
 	if (softirq_count() == (cnt & SOFTIRQ_MASK))
-		trace_softirqs_on(_RET_IP_);
+		//trace_softirqs_on(_RET_IP_);
 	preempt_count_sub(cnt);
 }
 
@@ -161,8 +161,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
 	/*
 	 * Are softirqs going to be turned on now:
 	 */
-	if (softirq_count() == SOFTIRQ_DISABLE_OFFSET)
-		trace_softirqs_on(ip);
+	//if (softirq_count() == SOFTIRQ_DISABLE_OFFSET)
+	//	trace_softirqs_on(ip);
 	/*
 	 * Keep preemption disabled until we are done with
 	 * softirq processing:
@@ -288,9 +288,9 @@ restart:
 
 		kstat_incr_softirqs_this_cpu(vec_nr);
 
-		trace_softirq_entry(vec_nr);
+		//trace_softirq_entry(vec_nr);
 		h->action(h);
-		trace_softirq_exit(vec_nr);
+		//trace_softirq_exit(vec_nr);
 		if (unlikely(prev_count != preempt_count())) {
 			pr_err("huh, entered softirq %u %s %p with preempt_count %08x, exited with %08x?\n",
 			       vec_nr, softirq_to_name[vec_nr], h->action,
@@ -414,7 +414,7 @@ void irq_exit(void)
 
 	tick_irq_exit();
 	rcu_irq_exit();
-	trace_hardirq_exit(); /* must be last! */
+	//trace_hardirq_exit(); /* must be last! */
 }
 
 /*
@@ -448,7 +448,7 @@ void raise_softirq(unsigned int nr)
 
 void __raise_softirq_irqoff(unsigned int nr)
 {
-	trace_softirq_raise(nr);
+	//trace_softirq_raise(nr);
 	or_softirq_pending(1UL << nr);
 }
 

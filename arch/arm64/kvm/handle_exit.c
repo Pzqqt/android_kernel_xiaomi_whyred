@@ -38,8 +38,8 @@ static int handle_hvc(struct kvm_vcpu *vcpu, struct kvm_run *run)
 {
 	int ret;
 
-	trace_kvm_hvc_arm64(*vcpu_pc(vcpu), vcpu_get_reg(vcpu, 0),
-			    kvm_vcpu_hvc_get_imm(vcpu));
+	//trace_kvm_hvc_arm64(*vcpu_pc(vcpu), vcpu_get_reg(vcpu, 0),
+	//		    kvm_vcpu_hvc_get_imm(vcpu));
 
 	ret = kvm_psci_call(vcpu);
 	if (ret < 0) {
@@ -71,10 +71,10 @@ static int handle_smc(struct kvm_vcpu *vcpu, struct kvm_run *run)
 static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
 {
 	if (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
-		trace_kvm_wfx_arm64(*vcpu_pc(vcpu), true);
+		//trace_kvm_wfx_arm64(*vcpu_pc(vcpu), true);
 		kvm_vcpu_on_spin(vcpu);
 	} else {
-		trace_kvm_wfx_arm64(*vcpu_pc(vcpu), false);
+		//trace_kvm_wfx_arm64(*vcpu_pc(vcpu), false);
 		kvm_vcpu_block(vcpu);
 	}
 

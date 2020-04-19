@@ -104,7 +104,7 @@ spmi_cmd(struct spmi_controller *ctrl, u8 opcode, u8 sid)
 		return -EINVAL;
 
 	ret = ctrl->cmd(ctrl, opcode, sid);
-	trace_spmi_cmd(opcode, sid, ret);
+	//trace_spmi_cmd(opcode, sid, ret);
 	return ret;
 }
 
@@ -116,9 +116,9 @@ static inline int spmi_read_cmd(struct spmi_controller *ctrl, u8 opcode,
 	if (!ctrl || !ctrl->read_cmd || ctrl->dev.type != &spmi_ctrl_type)
 		return -EINVAL;
 
-	trace_spmi_read_begin(opcode, sid, addr);
+	//trace_spmi_read_begin(opcode, sid, addr);
 	ret = ctrl->read_cmd(ctrl, opcode, sid, addr, buf, len);
-	trace_spmi_read_end(opcode, sid, addr, ret, len, buf);
+	//trace_spmi_read_end(opcode, sid, addr, ret, len, buf);
 	return ret;
 }
 
@@ -130,9 +130,9 @@ static inline int spmi_write_cmd(struct spmi_controller *ctrl, u8 opcode,
 	if (!ctrl || !ctrl->write_cmd || ctrl->dev.type != &spmi_ctrl_type)
 		return -EINVAL;
 
-	trace_spmi_write_begin(opcode, sid, addr, len, buf);
+	//trace_spmi_write_begin(opcode, sid, addr, len, buf);
 	ret = ctrl->write_cmd(ctrl, opcode, sid, addr, buf, len);
-	trace_spmi_write_end(opcode, sid, addr, ret);
+	//trace_spmi_write_end(opcode, sid, addr, ret);
 	return ret;
 }
 

@@ -703,7 +703,7 @@ next:
 		f2fs_put_page(page, 1);
 	}
 	if (!err)
-		f2fs_allocate_new_segments(sbi);
+		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
 	return err;
 }
 
@@ -786,6 +786,12 @@ skip:
 
 	if (need_writecp) {
 		set_sbi_flag(sbi, SBI_IS_RECOVERED);
+
+		/* recover zoned block devices' write pointer consistency */
+		if (!err && f2fs_sb_has_blkzoned(sbi)) {
+			err = f2fs_fix_curseg_write_pointer(sbi, false);
+			ret = err;
+		}
 
 		if (!err) {
 			struct cp_control cpc = {

@@ -592,7 +592,7 @@ void elv_drain_elevator(struct request_queue *q)
 
 void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 {
-	trace_block_rq_insert(q, rq);
+	//trace_block_rq_insert(q, rq);
 
 	blk_pm_add_request(q, rq);
 
@@ -929,7 +929,7 @@ static int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
 	elevator_exit(old);
 	blk_queue_bypass_end(q);
 
-	blk_add_trace_msg(q, "elv switch: %s", new_e->elevator_name);
+	//blk_add_trace_msg(q, "elv switch: %s", new_e->elevator_name);
 
 	return 0;
 

@@ -1380,9 +1380,6 @@ static int msm_dig_cdc_soc_probe(struct snd_soc_codec *codec)
 	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
 	int i, ret;
 
-/*zhiguang.su@MultiMedia.AudioDrv, 2017-03-27, add for debug*/
-pr_err("%s enter\n", __func__);
-
 #ifdef CONFIG_SOUND_CONTROL
 	sound_control_codec_ptr = codec;
 #endif

@@ -1415,7 +1415,11 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
 	if (!task_current(rq, p) && p->nr_cpus_allowed > 1)
 		enqueue_pushable_task(rq, p);
 
+#ifdef CONFIG_UCLAMP_TASK
+	if (!uclamp_boosted(p))
+#else
 	if (!schedtune_task_boost(p))
+#endif
 		return;
 
 	/*
@@ -2593,6 +2597,10 @@ const struct sched_class rt_sched_class = {
 	.switched_to		= switched_to_rt,
 
 	.update_curr		= update_curr_rt,
+
+#ifdef CONFIG_UCLAMP_TASK
+	.uclamp_enabled		= 1,
+#endif
 };
 
 #ifdef CONFIG_SCHED_DEBUG
